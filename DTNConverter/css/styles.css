@@ -1,0 +1,12 @@
+.center-content {
+  margin: auto;
+}
+
+@font-face {
+  font-family: NotoSansNewa;
+  src: url(../fonts/NotoSansNewa-Regular.otf);
+}
+
+.newa-font {
+  font-family: NotoSansNewa;
+}
