@@ -1,5 +1,5 @@
 .center-content {
-  margin: auto;
+  /* margin: auto; */
 }
 
 @font-face {
@@ -9,4 +9,40 @@
 
 .newa-font {
   font-family: NotoSansNewa;
+}
+
+#content {
+  /* background-color: antiquewhite; */
+  padding: 10px;
+}
+
+nav {
+  background-color: #283136;
+  color: aliceblue;
+  padding-top: 5px;
+  margin: auto;
+}
+
+nav > div > p {
+  font-family: monospace;
+  letter-spacing: 2px;
+}
+
+body {
+  background-color: #344952;
+}
+
+#deva-text {
+  width: 100%;
+}
+
+#newa-text {
+  width: 100%;
+}
+
+textarea {
+  border-width: 2px;
+  border-color: #6f7e87;
+  background-color: transparent;
+  color: white;
 }
