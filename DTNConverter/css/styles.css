@@ -11,6 +11,10 @@
   font-family: Arial;
 } */
 
+.newa-font {
+  font-family: NotoSansNewa;
+}
+
 #newa-text {
   font-family: NotoSansNewa;
 }
@@ -19,9 +23,9 @@
   font-family: NotoSansNewa;
 }
 
-/* #deva-text {
+#deva-text {
   font-family: Arial;
-} */
+}
 
 #content {
   /* background-color: antiquewhite; */
