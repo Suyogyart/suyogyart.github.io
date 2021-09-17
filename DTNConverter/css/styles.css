@@ -6,18 +6,18 @@
   font-family: NotoSansNewa;
   src: url(../fonts/NotoSansNewa-Regular.otf);
 }
-
+/* 
 @font-face {
   font-family: Arial;
-}
+} */
 
-.newa-font {
+#newa-text {
   font-family: NotoSansNewa;
 }
 
-.deva-font {
+/* #deva-text {
   font-family: Arial;
-}
+} */
 
 #content {
   /* background-color: antiquewhite; */
