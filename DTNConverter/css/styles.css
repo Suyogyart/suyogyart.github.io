@@ -11,6 +11,10 @@
   font-family: NotoSansNewa;
 }
 
+.deva-font {
+  font-family: Arial;
+}
+
 #content {
   /* background-color: antiquewhite; */
   padding: 10px;
