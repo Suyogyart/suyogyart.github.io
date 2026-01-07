@@ -40,8 +40,10 @@ function toggleButtons() {
 function runDevaToNewaConversion() {
     var dev_text = document.getElementById("deva-text").value;
     var newa_text = "";
-    for (i = 0; i < dev_text.length; i++) {
-        newa_text += array_two[array_one.indexOf(dev_text.charAt(i))] || dev_text.charAt(i);
+
+    // UPDATED: Use 'for...of' loop to handle Unicode characters properly
+    for (const char of dev_text) {
+        newa_text += array_two[array_one.indexOf(char)] || char;
     }
     document.getElementById("newa-text").value = newa_text;
 
@@ -52,8 +54,11 @@ function runDevaToNewaConversion() {
 function runNewaToDevaConversion() {
     var newa_text = document.getElementById("newa-text").value;
     var dev_text = "";
-    for (i = 0; i < newa_text.length; i++) {
-        dev_text += array_one[array_two.indexOf(newa_text.charAt(i))] || newa_text.charAt(i);
+
+    // UPDATED: Use 'for...of' loop. This ensures Newa characters (which are 2 units long)
+    // are treated as a single character, fixing the index lookup issue.
+    for (const char of newa_text) {
+        dev_text += array_one[array_two.indexOf(char)] || char;
     }
     document.getElementById("deva-text").value = dev_text;
 
