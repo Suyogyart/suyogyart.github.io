@@ -23,37 +23,27 @@
 
     <div class="container-fluid">
       <div class="row" id="content">
-        <div class="col-6">
-          <h6 class="text-secondary">Enter Devanagari/Nepali text here</h6>
-          <textarea
+        <div class="col-md-6 mb-5">
+          <h6 class="text-white text-center">Insert Devanagari text</h6>
+            <label for="deva-text"></label><textarea
             class="center-content"
             name="deva-text"
             id="deva-text"
             rows="10"
+            placeholder="Type Here / थन देवनागरी लिपिंइ च्वयादिसं"
           ></textarea>
+            <button id="btn-copy-deva" class="btn btn-dark mt-2" style="display: none;" onclick="copyDevanagari()">Copy Devanagari Text</button>
         </div>
-        <div class="col-6">
-          <h6 class="text-secondary">Enter Nepal Lipi/Newa text here</h6>
-          <textarea
+        <div class="col-md-6">
+          <h6 class="text-white text-center">Insert Nepal Lipi (Noto Sans Newa)</h6>
+            <label for="newa-text"></label><textarea
             class="center-content"
             name="newa-text"
             id="newa-text"
             rows="10"
+            placeholder="Type Here / 𑐠𑐣 𑐣𑐾𑐥𑐵𑐮 𑐮𑐶𑐥𑐶𑑄𑐂 𑐔𑑂𑐰𑐫𑐵𑐡𑐶𑐳𑑄"
           ></textarea>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12 text-center">
-          <button class="btn btn-danger" title="Convert To Nepal Lipi" onclick="convert()">
-            Convert To Newa
-          </button>
-        </div>
-      </div>
-      <div class="row mt-5">
-        <div class="col-12 text-center">
-          <button class="btn btn-danger" title="Convert To Devanagari Lipi" onclick="convertToDevanagari()">
-            Convert To Nepali
-          </button>
+            <button id="btn-copy-newa" class="btn btn-dark mt-2" style="display: none;" onclick="copyNewa()">Copy Newa Text</button>
         </div>
       </div>
     </div>
