@@ -339,12 +339,32 @@ function renderReferenceGrid(category) {
     container.innerHTML = items.map(item => `
         <div onclick="insertCharacter('${item.deva}')" 
              title="Click to insert ${item.deva} into converter"
-             class="group cursor-pointer bg-white dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700/80 rounded-xl p-2.5 flex flex-col items-center justify-center hover:border-brand dark:hover:border-brand-light hover:shadow-md hover:-translate-y-0.5 transition-all">
-            <span class="text-xs font-medium text-gray-400 dark:text-gray-500 mb-1 group-hover:text-brand transition-colors">${item.deva}</span>
-            <span class="text-2xl font-newa text-gray-900 dark:text-white font-bold group-hover:text-brand dark:group-hover:text-brand-light transition-colors">${item.newa}</span>
-            <span class="text-[10px] text-gray-400 dark:text-gray-500 mt-1 uppercase tracking-wider">${item.name}</span>
+             class="group cursor-pointer bg-white dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700/80 rounded-xl p-1.5 sm:p-2.5 flex flex-col items-center justify-center hover:border-brand dark:hover:border-brand-light hover:shadow-md hover:-translate-y-0.5 transition-all">
+            <span class="text-[10px] sm:text-xs font-medium text-gray-400 dark:text-gray-500 mb-0.5 sm:mb-1 group-hover:text-brand transition-colors">${item.deva}</span>
+            <span class="text-xl sm:text-2xl font-newa text-gray-900 dark:text-white font-bold group-hover:text-brand dark:group-hover:text-brand-light transition-colors">${item.newa}</span>
+            <span class="text-[9px] sm:text-[10px] text-gray-400 dark:text-gray-500 mt-0.5 sm:mt-1 uppercase tracking-wider truncate max-w-full">${item.name}</span>
         </div>
     `).join('');
+}
+
+// --- Mobile Navigation Menu Toggle ---
+function toggleMobileMenu() {
+    const menu = document.getElementById("mobile-menu");
+    const iconOpen = document.getElementById("mobile-menu-icon-open");
+    const iconClose = document.getElementById("mobile-menu-icon-close");
+
+    if (menu) {
+        const isHidden = menu.classList.contains("hidden");
+        if (isHidden) {
+            menu.classList.remove("hidden");
+            if (iconOpen) iconOpen.classList.add("hidden");
+            if (iconClose) iconClose.classList.remove("hidden");
+        } else {
+            menu.classList.add("hidden");
+            if (iconOpen) iconOpen.classList.remove("hidden");
+            if (iconClose) iconClose.classList.add("hidden");
+        }
+    }
 }
 
 // --- Dark Mode Theme Toggle ---

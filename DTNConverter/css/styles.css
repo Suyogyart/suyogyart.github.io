@@ -33,10 +33,29 @@ body, header, footer, section, div, a, p, h1, h2, h3, h4, span, textarea, button
   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.15s ease, box-shadow 0.2s ease, transform 0.15s ease;
 }
 
+/* Mobile Word Break & Smooth Scroll */
+.converter-textarea {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.scrollbar-none {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
 /* Custom scrollbar for textareas and charts */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
