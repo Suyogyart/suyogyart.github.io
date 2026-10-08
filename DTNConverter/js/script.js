@@ -161,45 +161,14 @@ function runNewaToDevaConversion() {
 
 // --- Interactive Utilities ---
 
-function swapContent() {
-    const devaElem = document.getElementById("deva-text");
-    const newaElem = document.getElementById("newa-text");
+// --- Container Layout Swapping ---
+function swapPanels() {
+    const container = document.getElementById("converter-grid-container");
+    if (!container || container.children.length < 2) return;
 
-    if (!devaElem || !newaElem) return;
-
-    const valDev = devaElem.value;
-    const valNewa = newaElem.value;
-
-    if (!valDev && !valNewa) return;
-
-    const convertedNewa = convertDevaToNewa(valDev);
-    const convertedDev = convertNewaToDeva(valNewa);
-
-    if (valDev && !valNewa) {
-        // Text in Devanagari box only -> Move converted representation to Newa box & clear Devanagari
-        newaElem.value = convertedNewa;
-        devaElem.value = "";
-    } else if (valNewa && !valDev) {
-        // Text in Newa box only -> Move converted representation to Devanagari box & clear Newa
-        devaElem.value = convertedDev;
-        newaElem.value = "";
-    } else if (valNewa === convertedNewa) {
-        // Newa box has auto-converted text from Devanagari -> Swap active focus to Newa box
-        newaElem.value = valNewa;
-        devaElem.value = "";
-    } else if (valDev === convertedDev) {
-        // Devanagari box has auto-converted text from Newa -> Swap active focus to Devanagari box
-        devaElem.value = valDev;
-        newaElem.value = "";
-    } else {
-        // Distinct texts in both boxes -> Swap converted values
-        devaElem.value = convertedDev;
-        newaElem.value = convertedNewa;
-    }
-
-    updateStats();
-    toggleActionButtons();
-    showToast("Content swapped!");
+    // Swap the DOM order of the two card panels
+    container.appendChild(container.firstElementChild);
+    showToast("Swapped panel positions!");
 }
 
 function clearAll() {
