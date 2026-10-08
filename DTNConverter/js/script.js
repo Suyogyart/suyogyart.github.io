@@ -77,9 +77,6 @@ const reference_data = {
     ]
 };
 
-// State variable to avoid infinite recursion loops on real-time sync
-let activeSource = 'deva';
-
 // Theme initialization on script load
 (function initTheme() {
     if (typeof window === 'undefined' || typeof localStorage === 'undefined' || typeof document === 'undefined') return;
@@ -92,43 +89,10 @@ let activeSource = 'deva';
     }
 })();
 
-// Page Load Handler
-if (typeof window !== 'undefined') {
-    window.addEventListener('DOMContentLoaded', () => {
-        const devaText = document.getElementById("deva-text");
-        const newaText = document.getElementById("newa-text");
-
-        if (devaText) {
-            devaText.addEventListener('input', () => {
-                if (activeSource === 'deva') {
-                    runDevaToNewaConversion();
-                }
-            });
-            devaText.addEventListener('focus', () => activeSource = 'deva');
-        }
-
-        if (newaText) {
-            newaText.addEventListener('input', () => {
-                if (activeSource === 'newa') {
-                    runNewaToDevaConversion();
-                }
-            });
-            newaText.addEventListener('focus', () => activeSource = 'newa');
-        }
-
-        renderReferenceGrid('consonants');
-        updateStats();
-        toggleActionButtons();
-    });
-}
-
-// --- Core Real-Time Conversion ---
-function runDevaToNewaConversion() {
-    const devText = document.getElementById("deva-text").value;
-    let textToProcess = devText;
-    
-    // Replace multi-char combinations first
-    textToProcess = textToProcess.replace(/ङ्ह/g, "𑐓")
+// Pure Transliteration Utility Functions
+function convertDevaToNewa(text) {
+    if (!text) return "";
+    let textToProcess = text.replace(/ङ्ह/g, "𑐓")
                                .replace(/ञ्ह/g, "𑐙")
                                .replace(/र्ह/g, "𑐭");
 
@@ -137,10 +101,46 @@ function runDevaToNewaConversion() {
         const idx = devanagari_chars.indexOf(char);
         newaResult += (idx !== -1) ? newa_chars[idx] : char;
     }
+    return newaResult;
+}
 
+function convertNewaToDeva(text) {
+    if (!text) return "";
+    let devResult = "";
+    for (const char of text) {
+        const idx = newa_chars.indexOf(char);
+        devResult += (idx !== -1) ? devanagari_chars[idx] : char;
+    }
+    return devResult;
+}
+
+// Page Load Handler
+if (typeof window !== 'undefined') {
+    window.addEventListener('DOMContentLoaded', () => {
+        const devaText = document.getElementById("deva-text");
+        const newaText = document.getElementById("newa-text");
+
+        if (devaText) {
+            devaText.addEventListener('input', runDevaToNewaConversion);
+        }
+
+        if (newaText) {
+            newaText.addEventListener('input', runNewaToDevaConversion);
+        }
+
+        renderReferenceGrid('consonants');
+        updateStats();
+        toggleActionButtons();
+    });
+}
+
+// --- Core Real-Time Conversion Handlers ---
+function runDevaToNewaConversion() {
+    const devText = document.getElementById("deva-text")?.value || "";
     const newaElem = document.getElementById("newa-text");
+
     if (newaElem) {
-        newaElem.value = newaResult;
+        newaElem.value = convertDevaToNewa(devText);
     }
 
     updateStats();
@@ -148,17 +148,11 @@ function runDevaToNewaConversion() {
 }
 
 function runNewaToDevaConversion() {
-    const newaText = document.getElementById("newa-text").value;
-    let devResult = "";
-
-    for (const char of newaText) {
-        const idx = newa_chars.indexOf(char);
-        devResult += (idx !== -1) ? devanagari_chars[idx] : char;
-    }
-
+    const newaText = document.getElementById("newa-text")?.value || "";
     const devaElem = document.getElementById("deva-text");
+
     if (devaElem) {
-        devaElem.value = devResult;
+        devaElem.value = convertNewaToDeva(newaText);
     }
 
     updateStats();
@@ -173,14 +167,39 @@ function swapContent() {
 
     if (!devaElem || !newaElem) return;
 
-    const tempDev = devaElem.value;
-    devaElem.value = newaElem.value;
-    
-    // Trigger conversion
-    activeSource = 'deva';
-    runDevaToNewaConversion();
+    const valDev = devaElem.value;
+    const valNewa = newaElem.value;
 
-    showToast("Content swapped successfully!");
+    if (!valDev && !valNewa) return;
+
+    const convertedNewa = convertDevaToNewa(valDev);
+    const convertedDev = convertNewaToDeva(valNewa);
+
+    if (valDev && !valNewa) {
+        // Text in Devanagari box only -> Move converted representation to Newa box & clear Devanagari
+        newaElem.value = convertedNewa;
+        devaElem.value = "";
+    } else if (valNewa && !valDev) {
+        // Text in Newa box only -> Move converted representation to Devanagari box & clear Newa
+        devaElem.value = convertedDev;
+        newaElem.value = "";
+    } else if (valNewa === convertedNewa) {
+        // Newa box has auto-converted text from Devanagari -> Swap active focus to Newa box
+        newaElem.value = valNewa;
+        devaElem.value = "";
+    } else if (valDev === convertedDev) {
+        // Devanagari box has auto-converted text from Newa -> Swap active focus to Devanagari box
+        devaElem.value = valDev;
+        newaElem.value = "";
+    } else {
+        // Distinct texts in both boxes -> Swap converted values
+        devaElem.value = convertedDev;
+        newaElem.value = convertedNewa;
+    }
+
+    updateStats();
+    toggleActionButtons();
+    showToast("Content swapped!");
 }
 
 function clearAll() {
@@ -209,7 +228,6 @@ function loadPreset(text) {
     const devaElem = document.getElementById("deva-text");
     if (devaElem) {
         devaElem.value = text;
-        activeSource = 'deva';
         runDevaToNewaConversion();
         devaElem.focus();
         showToast(`Loaded sample: "${text}"`);
@@ -225,7 +243,6 @@ function insertCharacter(char) {
         devaElem.value = val.substring(0, start) + char + val.substring(end);
         devaElem.selectionStart = devaElem.selectionEnd = start + char.length;
         devaElem.focus();
-        activeSource = 'deva';
         runDevaToNewaConversion();
         showToast(`Inserted '${char}'`);
     }
@@ -238,7 +255,7 @@ function updateStats() {
     const devaCharCount = devaVal.length;
     const devaWordCount = devaVal.trim() === "" ? 0 : devaVal.trim().split(/\s+/).length;
 
-    const newaCharCount = Array.from(newaVal).length; // Proper unicode character count
+    const newaCharCount = Array.from(newaVal).length; // Proper Unicode character count
     const newaWordCount = newaVal.trim() === "" ? 0 : newaVal.trim().split(/\s+/).length;
 
     const devaStats = document.getElementById("deva-stats");
@@ -266,21 +283,26 @@ function copyText(fieldId, btnId) {
     const btn = document.getElementById(btnId);
     if (!elem || !elem.value) return;
 
-    navigator.clipboard.writeText(elem.value).then(() => {
-        if (btn) {
-            const originalHTML = btn.innerHTML;
-            btn.innerHTML = `<svg class="w-4 h-4 text-green-500 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Copied!`;
-            setTimeout(() => {
-                btn.innerHTML = originalHTML;
-            }, 1800);
-        }
-        showToast("Copied to clipboard!");
-    }).catch(err => {
-        // Fallback for older browsers
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(elem.value).then(() => {
+            if (btn) {
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = `<svg class="w-4 h-4 text-green-500 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Copied!`;
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                }, 1800);
+            }
+            showToast("Copied to clipboard!");
+        }).catch(() => {
+            elem.select();
+            document.execCommand("copy");
+            showToast("Copied to clipboard!");
+        });
+    } else {
         elem.select();
         document.execCommand("copy");
         showToast("Copied to clipboard!");
-    });
+    }
 }
 
 function downloadNewaText() {
@@ -317,7 +339,7 @@ function setFontSize(size) {
 
     // Update button active state UI
     document.querySelectorAll('.font-size-btn').forEach(btn => {
-        btn.classList.remove('bg-brand', 'text-white', 'dark:bg-brand');
+        btn.classList.remove('bg-brand', 'text-white');
         btn.classList.add('bg-gray-100', 'dark:bg-gray-800', 'text-gray-700', 'dark:text-gray-300');
     });
 
@@ -372,6 +394,8 @@ function toggleTheme() {
 
 // --- Floating Toast Notifications ---
 function showToast(msg) {
+    if (typeof document === 'undefined') return;
+
     let toast = document.getElementById("toast-notification");
     if (!toast) {
         toast = document.createElement("div");
