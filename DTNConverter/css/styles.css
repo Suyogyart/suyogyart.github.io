@@ -1,64 +1,81 @@
-.center-content {
-  /* margin: auto; */
+/* Fonts definitions */
+@font-face {
+  font-family: 'NotoSansNewa';
+  src: url('../fonts/NotoSansNewa-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
-  font-family: NotoSansNewa;
-  src: url(../fonts/NotoSansNewa-Regular.otf);
-}
-/* 
-@font-face {
-  font-family: Arial;
-} */
-
-.newa-font {
-  font-family: NotoSansNewa;
+  font-family: 'NithyaRanjana';
+  src: url('https://cdn.staticdelivr.com/gh/callijatra/nithya-ranjana-webfont1/main/fonts/NithyaRanjanaDU-Regular.woff2') format('woff2'),
+       url('https://cdn.staticdelivr.com/gh/callijatra/nithya-ranjana-webfont1/main/fonts/NithyaRanjanaDU-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
 
-#newa-text {
-  font-family: NotoSansNewa;
+.font-newa {
+  font-family: 'NotoSansNewa', sans-serif;
 }
 
-#app-title {
-  font-family: NotoSansNewa;
+.font-ranjana {
+  font-family: 'NithyaRanjana', sans-serif;
 }
 
-#deva-text {
-  font-family: Arial;
+/* Custom transitions and scrollbar */
+html {
+  scroll-behavior: smooth;
 }
 
-#content {
-  /* background-color: antiquewhite; */
-  padding: 10px;
+body, header, footer, section, div, a, p, h1, h2, h3, h4, span, textarea, button {
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.15s ease, box-shadow 0.2s ease, transform 0.15s ease;
 }
 
-nav {
-  background-color: #283136;
-  color: aliceblue;
-  padding-top: 5px;
-  margin: auto;
+/* Custom scrollbar for textareas and charts */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
 
-nav > div > p {
-  font-family: monospace;
-  letter-spacing: 2px;
+::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-body {
-  background-color: #344952;
+::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.4);
+  border-radius: 9999px;
 }
 
-#deva-text {
-  width: 100%;
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.7);
 }
 
-#newa-text {
-  width: 100%;
+/* Textarea focus glow */
+.converter-textarea:focus {
+  outline: none;
+  border-color: #c0392b;
+  box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.15);
 }
 
-textarea {
-  border-width: 2px;
-  border-color: #6f7e87;
-  background-color: transparent;
-  color: white;
+.dark .converter-textarea:focus {
+  border-color: #e8877f;
+  box-shadow: 0 0 0 3px rgba(232, 135, 127, 0.2);
+}
+
+/* Pulse animation for copy toast */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.25s ease-out forwards;
 }

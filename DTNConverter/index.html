@@ -1,51 +1,391 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
+<html lang="en" class="scroll-smooth">
+<head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lipi Converter</title>
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-    />
+    <title>Nepal Lipi Converter — Callijatra Foundation</title>
+    <meta name="description" content="Convert Devanagari text to Nepal Lipi (Newa script) in real-time. An open digital tool by Callijatra Foundation for preserving and digitizing indigenous Nepal scripts." />
+    
+    <!-- Google Fonts Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            DEFAULT: '#c0392b',
+                            hover: '#a93226',
+                            light: '#e8877f',
+                            subtle: '#fbeae9',
+                            darkSubtle: '#3b1212',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        newa: ['NotoSansNewa', 'sans-serif'],
+                        ranjana: ['NithyaRanjana', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Custom CSS Styles -->
     <link rel="stylesheet" href="css/styles.css" />
+
+    <!-- Anti-Flash Dark Mode Script -->
+    <script>
+        (function () {
+            const saved = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (saved === 'dark' || (!saved && prefersDark)) {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
+</head>
+
+<body class="bg-[#fbf7f5] dark:bg-gray-950 text-gray-900 dark:text-gray-100 font-sans antialiased min-h-screen flex flex-col selection:bg-brand/20 selection:text-brand">
+
+    <!-- NAVBAR HEADER (Matching Callijatra.github.io) -->
+    <header class="sticky top-0 z-50 bg-white/90 dark:bg-gray-950/90 backdrop-blur border-b border-gray-200/80 dark:border-gray-800 shadow-sm">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="https://callijatra.github.io/" class="flex items-center gap-3 shrink-0 group">
+                <div class="w-10 h-10 rounded-xl bg-brand/10 dark:bg-brand/20 border border-brand/30 flex items-center justify-center text-brand dark:text-brand-light font-newa text-xl font-bold group-hover:scale-105 transition-transform">
+                    𑐣
+                </div>
+                <div>
+                    <span class="block text-base font-bold tracking-tight text-gray-900 dark:text-white group-hover:text-brand dark:group-hover:text-brand-light transition-colors">
+                        Callijatra <span class="text-brand dark:text-brand-light font-normal text-xs uppercase tracking-widest ml-1 hidden sm:inline-block">Foundation</span>
+                    </span>
+                    <span class="block text-[11px] text-gray-500 dark:text-gray-400 font-medium tracking-wider uppercase">Nepal Lipi Converter</span>
+                </div>
+            </a>
+
+            <!-- Navigation Links -->
+            <ul class="hidden md:flex items-center gap-1 text-sm font-medium">
+                <li>
+                    <a href="https://callijatra.github.io/" class="px-3.5 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">Home</a>
+                </li>
+                <li>
+                    <a href="https://callijatra.github.io/resources" class="px-3.5 py-2 rounded-lg text-brand dark:text-brand-light bg-brand/10 dark:bg-brand/20 font-semibold transition-colors">Resources</a>
+                </li>
+                <li>
+                    <a href="https://callijatra.github.io/gallery" class="px-3.5 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">Gallery</a>
+                </li>
+                <li>
+                    <a href="https://callijatra.github.io/about" class="px-3.5 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">About Us</a>
+                </li>
+                <li>
+                    <a href="https://www.instagram.com/callijatra" target="_blank" rel="noopener noreferrer" class="ml-2 px-4 py-2 rounded-lg bg-brand hover:bg-brand-hover text-white text-xs font-semibold shadow-sm transition-all">Contact</a>
+                </li>
+            </ul>
+
+            <!-- Controls: Theme Toggle -->
+            <div class="flex items-center gap-2">
+                <button onclick="toggleTheme()" type="button" aria-label="Toggle theme" 
+                        class="p-2.5 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 text-gray-600 dark:text-gray-300 hover:text-brand dark:hover:text-brand-light hover:border-brand/30 transition-all">
+                    <!-- Sun Icon -->
+                    <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                    <!-- Moon Icon -->
+                    <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                    </svg>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- HERO HEADER SECTION -->
+    <section class="relative pt-12 pb-8 overflow-hidden">
+        <!-- Background Orbs -->
+        <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-brand/5 blur-3xl pointer-events-none dark:hidden" aria-hidden="true"></div>
+        <div class="absolute -bottom-16 -left-16 w-72 h-72 rounded-full bg-brand/5 blur-3xl pointer-events-none dark:hidden" aria-hidden="true"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <!-- Badge -->
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-brand/10 text-brand dark:bg-brand/20 dark:text-brand-light border border-brand/20 mb-4 backdrop-blur-sm">
+                <span class="font-newa text-base">𑐣𑐾𑐥𑐵𑐮 𑐮𑐶𑐥𑐶</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-brand dark:bg-brand-light"></span>
+                <span>OPEN DIGITAL TOOL</span>
+            </div>
+
+            <!-- Title -->
+            <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-gray-900 dark:text-white">
+                Devanagari <span class="text-brand dark:text-brand-light font-newa font-normal">↔</span> Nepal Lipi Converter
+            </h1>
+
+            <!-- Subtitle -->
+            <p class="mt-3 text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
+                Convert text seamlessly between Devanagari and traditional <strong class="text-gray-900 dark:text-gray-200 font-semibold">Nepal Lipi (Newa script)</strong> in real-time. Preserving indigenous typography for everyone.
+            </p>
+        </div>
+    </section>
+
+    <!-- MAIN CONVERTER SECTION -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex-1">
+        
+        <!-- TOOLBAR / QUICK CONTROLS CARD -->
+        <div class="bg-white dark:bg-gray-900 rounded-2xl p-4 sm:p-5 border border-gray-200/80 dark:border-gray-800 shadow-sm mb-6">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                
+                <!-- Quick Sample Presets -->
+                <div class="flex items-center gap-2 flex-wrap">
+                    <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider flex items-center gap-1.5 shrink-0">
+                        <svg class="w-4 h-4 text-brand dark:text-brand-light" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        Quick Samples:
+                    </span>
+                    <button onclick="loadPreset('ज्वज्वलोपा')" class="px-2.5 py-1 rounded-lg text-xs font-medium bg-gray-100 dark:bg-gray-800 hover:bg-brand/10 hover:text-brand dark:hover:bg-brand/20 dark:hover:text-brand-light transition-all">ज्वज्वलोपा</button>
+                    <button onclick="loadPreset('नेपाल लिपि')" class="px-2.5 py-1 rounded-lg text-xs font-medium bg-gray-100 dark:bg-gray-800 hover:bg-brand/10 hover:text-brand dark:hover:bg-brand/20 dark:hover:text-brand-light transition-all">नेपाल लिपि</button>
+                    <button onclick="loadPreset('भिंतुना')" class="px-2.5 py-1 rounded-lg text-xs font-medium bg-gray-100 dark:bg-gray-800 hover:bg-brand/10 hover:text-brand dark:hover:bg-brand/20 dark:hover:text-brand-light transition-all">भिंतुना</button>
+                    <button onclick="loadPreset('सुभाय्')" class="px-2.5 py-1 rounded-lg text-xs font-medium bg-gray-100 dark:bg-gray-800 hover:bg-brand/10 hover:text-brand dark:hover:bg-brand/20 dark:hover:text-brand-light transition-all">सुभाय्</button>
+                    <button onclick="loadPreset('नेपाल संवत्')" class="px-2.5 py-1 rounded-lg text-xs font-medium bg-gray-100 dark:bg-gray-800 hover:bg-brand/10 hover:text-brand dark:hover:bg-brand/20 dark:hover:text-brand-light transition-all">नेपाल संवत्</button>
+                    <button onclick="loadPreset('०१२३४५६७८९')" class="px-2.5 py-1 rounded-lg text-xs font-medium bg-gray-100 dark:bg-gray-800 hover:bg-brand/10 hover:text-brand dark:hover:bg-brand/20 dark:hover:text-brand-light transition-all">०१२३४५६७८९</button>
+                </div>
+
+                <!-- Font Size Controls & Clear All -->
+                <div class="flex items-center gap-2 self-end md:self-auto shrink-0">
+                    <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Font:</span>
+                    <div class="flex items-center bg-gray-100 dark:bg-gray-800 p-1 rounded-xl border border-gray-200 dark:border-gray-700/60">
+                        <button id="btn-size-sm" onclick="setFontSize('sm')" class="font-size-btn px-2.5 py-1 rounded-lg text-xs font-medium transition-all">S</button>
+                        <button id="btn-size-md" onclick="setFontSize('md')" class="font-size-btn px-2.5 py-1 rounded-lg text-xs font-medium bg-brand text-white transition-all">M</button>
+                        <button id="btn-size-lg" onclick="setFontSize('lg')" class="font-size-btn px-2.5 py-1 rounded-lg text-xs font-medium transition-all">L</button>
+                        <button id="btn-size-xl" onclick="setFontSize('xl')" class="font-size-btn px-2.5 py-1 rounded-lg text-xs font-medium transition-all">XL</button>
+                    </div>
+                    <button onclick="clearAll()" class="p-2 rounded-xl text-gray-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 dark:hover:text-red-400 border border-transparent hover:border-red-200 transition-all text-xs font-medium flex items-center gap-1" title="Clear all fields">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        <span class="hidden sm:inline">Clear</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2-COLUMN CONVERTER PANELS -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 relative">
+
+            <!-- LEFT PANEL: DEVANAGARI INPUT -->
+            <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200/80 dark:border-gray-800 shadow-sm flex flex-col overflow-hidden hover:shadow-md transition-all">
+                <!-- Panel Header -->
+                <div class="px-5 py-3.5 bg-gray-50/80 dark:bg-gray-800/60 border-b border-gray-200/80 dark:border-gray-800 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-brand"></span>
+                        <h2 class="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider">Devanagari</h2>
+                        <span class="text-xs text-gray-400 dark:text-gray-500 font-normal">(देवनागरी)</span>
+                    </div>
+                    <button onclick="clearField('deva-text')" class="text-xs text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">Clear</button>
+                </div>
+
+                <!-- Textarea -->
+                <div class="p-4 flex-1">
+                    <textarea id="deva-text" rows="9" 
+                              class="converter-textarea w-full h-full bg-transparent border-0 resize-y text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-600 focus:ring-0 leading-relaxed font-sans text-lg"
+                              placeholder="Type or paste Devanagari text here... / थन देवनागरी लिपिंइ च्वयादिसं"></textarea>
+                </div>
+
+                <!-- Panel Footer Stats & Actions -->
+                <div class="px-5 py-3 bg-gray-50/60 dark:bg-gray-800/40 border-t border-gray-200/80 dark:border-gray-800 flex items-center justify-between">
+                    <span id="deva-stats" class="text-xs font-medium text-gray-400 dark:text-gray-500">0 chars • 0 words</span>
+                    <button id="btn-copy-deva" onclick="copyText('deva-text', 'btn-copy-deva')" disabled
+                            class="px-3.5 py-1.5 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-brand hover:text-white dark:hover:bg-brand disabled:opacity-40 disabled:cursor-not-allowed text-xs font-semibold transition-all flex items-center gap-1.5">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h6a2 2 0 012 2v2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg>
+                        Copy Devanagari
+                    </button>
+                </div>
+            </div>
+
+            <!-- FLOATING SWAP BUTTON (Desktop Center / Mobile Middle) -->
+            <div class="lg:absolute lg:top-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 z-20 flex justify-center my-[-12px] lg:my-0">
+                <button onclick="swapContent()" title="Swap Devanagari and Nepal Lipi"
+                        class="group p-3 rounded-full bg-brand text-white shadow-lg hover:bg-brand-hover hover:scale-110 active:scale-95 transition-all border-4 border-[#fbf7f5] dark:border-gray-950 flex items-center justify-center">
+                    <svg class="w-5 h-5 group-hover:rotate-180 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- RIGHT PANEL: NEPAL LIPI OUTPUT -->
+            <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200/80 dark:border-gray-800 shadow-sm flex flex-col overflow-hidden hover:shadow-md transition-all">
+                <!-- Panel Header -->
+                <div class="px-5 py-3.5 bg-gray-50/80 dark:bg-gray-800/60 border-b border-gray-200/80 dark:border-gray-800 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-brand-light dark:bg-brand"></span>
+                        <h2 class="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider">Nepal Lipi</h2>
+                        <span class="text-xs text-gray-400 dark:text-gray-500 font-newa">(𑐣𑐾𑐥𑐵𑐮 𑐮𑐶𑐥𑐶)</span>
+                    </div>
+                    <button onclick="clearField('newa-text')" class="text-xs text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">Clear</button>
+                </div>
+
+                <!-- Textarea -->
+                <div class="p-4 flex-1">
+                    <textarea id="newa-text" rows="9" 
+                              class="converter-textarea w-full h-full bg-transparent border-0 resize-y text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-600 focus:ring-0 leading-relaxed font-newa text-xl"
+                              placeholder="Converted text will appear here... / 𑐠𑐣 𑐣𑐾𑐥𑐵𑐮 𑐮𑐶𑐥𑐶𑑄𑐂 𑐔𑑂𑐰𑐫𑐵𑐡𑐶{...}"></textarea>
+                </div>
+
+                <!-- Panel Footer Stats & Actions -->
+                <div class="px-5 py-3 bg-gray-50/60 dark:bg-gray-800/40 border-t border-gray-200/80 dark:border-gray-800 flex items-center justify-between flex-wrap gap-2">
+                    <span id="newa-stats" class="text-xs font-medium text-gray-400 dark:text-gray-500">0 chars • 0 words</span>
+                    <div class="flex items-center gap-2">
+                        <button id="btn-download-newa" onclick="downloadNewaText()" disabled
+                                class="px-3 py-1.5 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed text-xs font-semibold transition-all flex items-center gap-1">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            Export .txt
+                        </button>
+                        <button id="btn-copy-newa" onclick="copyText('newa-text', 'btn-copy-newa')" disabled
+                                class="px-3.5 py-1.5 rounded-xl bg-brand text-white hover:bg-brand-hover disabled:opacity-40 disabled:cursor-not-allowed text-xs font-semibold shadow-sm transition-all flex items-center gap-1.5">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h6a2 2 0 012 2v2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg>
+                            Copy Newa Text
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- INTERACTIVE SECTION: CHARACTER & ALPHABET REFERENCE MATRIX -->
+        <section class="mt-12 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200/80 dark:border-gray-800 p-6 shadow-sm">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6 border-b border-gray-100 dark:border-gray-800 pb-4">
+                <div>
+                    <span class="text-xs font-semibold uppercase tracking-wider text-brand dark:text-brand-light">Interactive Script Guide</span>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mt-0.5">Nepal Lipi Character Matrix</h3>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Click any letter card to insert its character directly into the converter.</p>
+                </div>
+                
+                <!-- Category Tabs -->
+                <div class="flex items-center gap-1 border-b border-gray-200 dark:border-gray-700 self-stretch md:self-auto overflow-x-auto pb-1 md:pb-0">
+                    <button id="ref-tab-consonants" onclick="renderReferenceGrid('consonants')" class="ref-tab-btn px-3 py-1.5 text-xs font-semibold border-b-2 border-brand text-brand dark:text-brand-light transition-all whitespace-nowrap">Consonants (व्यंजन)</button>
+                    <button id="ref-tab-vowels" onclick="renderReferenceGrid('vowels')" class="ref-tab-btn px-3 py-1.5 text-xs font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-all whitespace-nowrap">Vowels (स्वर)</button>
+                    <button id="ref-tab-matras" onclick="renderReferenceGrid('matras')" class="ref-tab-btn px-3 py-1.5 text-xs font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-all whitespace-nowrap">Matras (मात्रा)</button>
+                    <button id="ref-tab-numerals" onclick="renderReferenceGrid('numerals')" class="ref-tab-btn px-3 py-1.5 text-xs font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-all whitespace-nowrap">Numerals (अंक)</button>
+                </div>
+            </div>
+
+            <!-- Dynamic Character Cards Grid -->
+            <div id="reference-grid-container" class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-12 gap-2.5">
+                <!-- Cards injected dynamically by script.js -->
+            </div>
+        </section>
+
+        <!-- INFORMATIONAL SECTION: ABOUT NEPAL LIPI & CALLIJATRA -->
+        <section class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <!-- Card 1: About Nepal Lipi -->
+            <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-200/80 dark:border-gray-800 shadow-sm flex flex-col justify-between">
+                <div>
+                    <div class="w-10 h-10 rounded-xl bg-brand/10 dark:bg-brand/20 border border-brand/20 flex items-center justify-center text-brand dark:text-brand-light mb-4">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">What is Nepal Lipi?</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                        Nepal Lipi (𑐣𑐾𑐥𑐵𑐮 𑐮𑐶𑐥𑐶), also known as Prachalit Nepal Lipi, is the traditional script of Nepal Bhasa. Used extensively across Kathmandu Valley for centuries in stone inscriptions, manuscripts, and literature, it is encoded in Unicode standard (U+11480–U+114DF).
+                    </p>
+                </div>
+                <div class="mt-4 pt-3 border-t border-gray-100 dark:border-gray-800">
+                    <a href="https://callijatra.github.io/about" class="text-xs font-semibold text-brand dark:text-brand-light hover:underline inline-flex items-center gap-1">
+                        Learn more about Nepal Lipi →
+                    </a>
+                </div>
+            </div>
+
+            <!-- Card 2: How Transliteration Works -->
+            <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-200/80 dark:border-gray-800 shadow-sm flex flex-col justify-between">
+                <div>
+                    <div class="w-10 h-10 rounded-xl bg-brand/10 dark:bg-brand/20 border border-brand/20 flex items-center justify-center text-brand dark:text-brand-light mb-4">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Real-Time Conversion</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                        This converter maps Devanagari phonemes directly to Unicode Nepal Lipi code points. Special conjuncts (such as ङ्ह, ञ्ह, र्ह) are parsed accurately to maintain authentic manuscript orthography in real-time.
+                    </p>
+                </div>
+                <div class="mt-4 pt-3 border-t border-gray-100 dark:border-gray-800">
+                    <a href="https://callijatra.github.io/resources#converter" class="text-xs font-semibold text-brand dark:text-brand-light hover:underline inline-flex items-center gap-1">
+                        Explore Callijatra digital tools →
+                    </a>
+                </div>
+            </div>
+
+            <!-- Card 3: Callijatra Ecosystem -->
+            <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-200/80 dark:border-gray-800 shadow-sm flex flex-col justify-between">
+                <div>
+                    <div class="w-10 h-10 rounded-xl bg-brand/10 dark:bg-brand/20 border border-brand/20 flex items-center justify-center text-brand dark:text-brand-light mb-4">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">More Digital Tools</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                        Discover Callijatra’s full open suite including <strong class="text-gray-900 dark:text-gray-200 font-semibold">Nepal Lipi Type Newa</strong> app, <strong class="text-gray-900 dark:text-gray-200 font-semibold">Durga Lal Shrestha Font</strong>, and <strong class="text-gray-900 dark:text-gray-200 font-semibold">Nithya Ranjana Webfont</strong> for digital typography.
+                    </p>
+                </div>
+                <div class="mt-4 pt-3 border-t border-gray-100 dark:border-gray-800">
+                    <a href="https://callijatra.github.io/resources" class="text-xs font-semibold text-brand dark:text-brand-light hover:underline inline-flex items-center gap-1">
+                        View all Callijatra resources →
+                    </a>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- FOOTER (Matching Callijatra.github.io) -->
+    <footer class="mt-16 bg-white dark:bg-gray-900 border-t border-gray-200/80 dark:border-gray-800 text-gray-600 dark:text-gray-400">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <!-- Col 1: Brand Info -->
+                <div class="md:col-span-2">
+                    <a href="https://callijatra.github.io/" class="flex items-center gap-3 mb-3">
+                        <div class="w-8 h-8 rounded-lg bg-brand/10 dark:bg-brand/20 border border-brand/30 flex items-center justify-center text-brand dark:text-brand-light font-newa font-bold">
+                            𑐣
+                        </div>
+                        <span class="text-base font-bold text-gray-900 dark:text-white">Callijatra Foundation</span>
+                    </a>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 leading-relaxed max-w-md">
+                        Preserving, promoting, and digitizing indigenous scripts and calligraphy such as Ranjana Lipi and Nepal Lipi through fonts, apps, learning resources, and open digital tools.
+                    </p>
+                </div>
+
+                <!-- Col 2: Navigation -->
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-gray-900 dark:text-white mb-3">Navigation</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li><a href="https://callijatra.github.io/" class="hover:text-brand dark:hover:text-brand-light transition-colors">Home</a></li>
+                        <li><a href="https://callijatra.github.io/resources" class="hover:text-brand dark:hover:text-brand-light transition-colors">Resources & Fonts</a></li>
+                        <li><a href="https://callijatra.github.io/gallery" class="hover:text-brand dark:hover:text-brand-light transition-colors">Events & Gallery</a></li>
+                        <li><a href="https://callijatra.github.io/about" class="hover:text-brand dark:hover:text-brand-light transition-colors">About Us</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 3: Connect Links -->
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-gray-900 dark:text-white mb-3">Connect</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li><a href="https://www.instagram.com/callijatra" target="_blank" rel="noopener noreferrer" class="hover:text-brand dark:hover:text-brand-light transition-colors">Instagram</a></li>
+                        <li><a href="https://www.facebook.com/ranjana-script" target="_blank" rel="noopener noreferrer" class="hover:text-brand dark:hover:text-brand-light transition-colors">Facebook</a></li>
+                        <li><a href="https://www.youtube.com/@callijatra" target="_blank" rel="noopener noreferrer" class="hover:text-brand dark:hover:text-brand-light transition-colors">YouTube</a></li>
+                        <li><a href="https://github.com/callijatra" target="_blank" rel="noopener noreferrer" class="hover:text-brand dark:hover:text-brand-light transition-colors">GitHub</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Bottom Copyright bar -->
+            <div class="pt-8 border-t border-gray-100 dark:border-gray-800 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-400 dark:text-gray-500 gap-4">
+                <p>© 2026 Callijatra Foundation. All rights reserved.</p>
+                <p>Designed for digital indigenous script preservation.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Main JS Application Logic -->
     <script src="js/script.js"></script>
-  </head>
-
-  <body>
-    <nav>
-      <div id="app-title" class="newa-font text-center">
-        <h2>𑐣𑐾𑐥𑐵𑐮 𑐮𑐶𑐥𑐶 𑐎𑐣𑑂𑐨𑐬𑑂𑐚𑐬</h2>
-        <p>NEPAL LIPI CONVERTER</p>
-      </div>
-    </nav>
-
-    <div class="container-fluid">
-      <div class="row" id="content">
-        <div class="col-md-6 mb-5">
-          <h6 class="text-white text-center">Devanagari</h6>
-            <label for="deva-text"></label><textarea
-            class="center-content"
-            name="deva-text"
-            id="deva-text"
-            rows="10"
-            placeholder="Type Here / थन देवनागरी लिपिंइ च्वयादिसं"
-          ></textarea>
-            <button id="btn-copy-deva" class="btn btn-dark mt-2" style="display: none;" onclick="copyDevanagari()">Copy Devanagari Text</button>
-        </div>
-        <div class="col-md-6">
-          <h6 class="text-white text-center">Nepal Lipi (Noto Sans Newa)</h6>
-            <label for="newa-text"></label><textarea
-            class="center-content"
-            name="newa-text"
-            id="newa-text"
-            rows="10"
-            placeholder="Type Here / 𑐠𑐣 𑐣𑐾𑐥𑐵𑐮 𑐮𑐶𑐥𑐶𑑄𑐂 𑐔𑑂𑐰𑐫𑐵𑐡𑐶𑐳𑑄"
-          ></textarea>
-            <button id="btn-copy-newa" class="btn btn-dark mt-2" style="display: none;" onclick="copyNewa()">Copy Newa Text</button>
-        </div>
-      </div>
-    </div>
-  </body>
+</body>
 </html>
