@@ -33,6 +33,25 @@ body, header, footer, section, div, a, p, h1, h2, h3, h4, span, textarea, button
   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.15s ease, box-shadow 0.2s ease, transform 0.15s ease;
 }
 
+/* Brand Title Badge matching Callijatra Font Switcher Widget */
+.brand-title-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background-color: #fbeae9;
+  color: #c0392b;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  border: 1px solid #f5c6cb;
+}
+
+.dark .brand-title-badge {
+  background-color: #3b1212;
+  color: #e8877f;
+  border-color: #7f1d1d;
+}
+
 /* Mobile Word Break & Smooth Scroll */
 .converter-textarea {
   word-break: break-word;
